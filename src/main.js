@@ -1,6 +1,12 @@
 import { el } from './dom.js';
 import { PAIRS_COUNT } from './cards.js';
-import { createDeck, renderBoard, bindCounters } from './game.js';
+import {
+    createDeck,
+    renderBoard,
+    bindCounters,
+    setOnWin,
+} from './game.js';
+import { createWinModal } from './winModal.js';
 
 const newGameBtn = el('button', {
     class: 'btn btn--primary',
@@ -34,9 +40,25 @@ const stats = el('div', { class: 'stats' }, [
 ]);
 
 const board = el('div', { class: 'board' });
-
 bindCounters(movesEl, pairsEl);
 renderBoard(board, createDeck());
 
-const app = el('div', { class: 'app' }, [header, stats, board]);
+const winModal = createWinModal({
+    onNewGame: () => {
+        // TODO (Шаг 7): настоящий перезапуск
+        console.log('New game from win modal (пока заглушка)');
+    },
+});
+
+setOnWin((moves) => {
+    winModal.setMoves(moves);
+    winModal.open();
+});
+
+const app = el('div', { class: 'app' }, [
+    header,
+    stats,
+    board,
+    winModal.element,
+]);
 document.body.appendChild(app);

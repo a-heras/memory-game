@@ -1,7 +1,7 @@
 import { el } from './dom.js';
 import { CARD_VALUES } from './cards.js';
 
-const MISMATCH_DELAY = 1000; // мс, в диапазоне 700–1500
+const MISMATCH_DELAY = 1000;
 
 export function shuffle(array) {
     const result = array.slice();
@@ -37,6 +37,12 @@ const state = {
     totalPairs: CARD_VALUES.length,
     closeTimeoutId: null,
 };
+
+let onWinCallback = null;
+
+export function setOnWin(callback) {
+    onWinCallback = callback;
+}
 
 let movesEl = null;
 let pairsEl = null;
@@ -106,7 +112,10 @@ function onCardClick(event) {
         state.firstCard = null;
         state.secondCard = null;
 
-        // TODO (Шаг 5): если foundPairs === totalPairs — открыть модалку победы
+        if (state.foundPairs === state.totalPairs
+            && typeof onWinCallback === 'function') {
+            onWinCallback(state.moves);
+        }
         return;
     }
 
@@ -138,4 +147,8 @@ export function resetState() {
     state.moves = 0;
     state.foundPairs = 0;
     updateCounters();
+}
+
+export function getMoves() {
+    return state.moves;
 }
