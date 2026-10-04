@@ -1,6 +1,6 @@
 import { el } from './dom.js';
 import { PAIRS_COUNT } from './cards.js';
-import { createDeck, renderBoard } from './game.js';
+import { createDeck, renderBoard, bindCounters } from './game.js';
 
 const newGameBtn = el('button', {
     class: 'btn btn--primary',
@@ -34,6 +34,8 @@ const stats = el('div', { class: 'stats' }, [
 ]);
 
 const board = el('div', { class: 'board' });
+
+bindCounters(movesEl, pairsEl);
 renderBoard(board, createDeck());
 
 const app = el('div', { class: 'app' }, [header, stats, board]);
