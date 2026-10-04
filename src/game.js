@@ -157,3 +157,9 @@ export function resetState() {
 export function getMoves() {
     return state.moves;
 }
+
+export function startNewGame(board) {
+    cancelPendingClose();
+    resetState();
+    renderBoard(board, createDeck());
+}

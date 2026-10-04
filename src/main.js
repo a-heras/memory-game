@@ -5,6 +5,7 @@ import {
     renderBoard,
     bindCounters,
     setOnWin,
+    startNewGame,
 } from './game.js';
 import { createWinModal } from './winModal.js';
 import { createLeadersModal } from './leadersModal.js';
@@ -41,13 +42,19 @@ const stats = el('div', { class: 'stats' }, [
 ]);
 
 const board = el('div', { class: 'board' });
+
 bindCounters(movesEl, pairsEl);
 renderBoard(board, createDeck());
 
+function restart() {
+    startNewGame(board);
+}
+
+newGameBtn.addEventListener('click', restart);
+
 const winModal = createWinModal({
     onNewGame: () => {
-        // TODO (Шаг 7): настоящий перезапуск
-        console.log('New game from win modal (пока заглушка)');
+        restart();
     },
 });
 
