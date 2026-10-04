@@ -1,6 +1,8 @@
 import { el } from './dom.js';
 import { CARD_VALUES } from './cards.js';
 
+const MISMATCH_DELAY = 1000; // мс, в диапазоне 700–1500
+
 export function shuffle(array) {
     const result = array.slice();
     for (let i = result.length - 1; i > 0; i -= 1) {
@@ -28,10 +30,12 @@ export function createCard(value, index) {
 
 const state = {
     firstCard: null,
+    secondCard: null,
     lockBoard: false,
     moves: 0,
     foundPairs: 0,
     totalPairs: CARD_VALUES.length,
+    closeTimeoutId: null,
 };
 
 let movesEl = null;
@@ -54,6 +58,22 @@ function isAlreadyOpen(card) {
         || card.classList.contains('card--found');
 }
 
+function closeMismatch() {
+    if (state.firstCard) {
+        state.firstCard.classList.remove('card--flipped');
+        state.firstCard.setAttribute('aria-label', 'Закрытая карточка');
+    }
+    if (state.secondCard) {
+        state.secondCard.classList.remove('card--flipped');
+        state.secondCard.setAttribute('aria-label', 'Закрытая карточка');
+    }
+
+    state.firstCard = null;
+    state.secondCard = null;
+    state.lockBoard = false;
+    state.closeTimeoutId = null;
+}
+
 function onCardClick(event) {
     const card = event.currentTarget;
 
@@ -68,6 +88,7 @@ function onCardClick(event) {
         return;
     }
 
+    state.secondCard = card;
     state.moves += 1;
     updateCounters();
 
@@ -83,13 +104,14 @@ function onCardClick(event) {
         updateCounters();
 
         state.firstCard = null;
+        state.secondCard = null;
 
         // TODO (Шаг 5): если foundPairs === totalPairs — открыть модалку победы
         return;
     }
 
     state.lockBoard = true;
-    state.firstCard = null;
+    state.closeTimeoutId = window.setTimeout(closeMismatch, MISMATCH_DELAY);
 }
 
 export function renderBoard(board, deck) {
@@ -101,8 +123,17 @@ export function renderBoard(board, deck) {
     });
 }
 
+export function cancelPendingClose() {
+    if (state.closeTimeoutId !== null) {
+        clearTimeout(state.closeTimeoutId);
+        state.closeTimeoutId = null;
+    }
+}
+
 export function resetState() {
+    cancelPendingClose();
     state.firstCard = null;
+    state.secondCard = null;
     state.lockBoard = false;
     state.moves = 0;
     state.foundPairs = 0;
