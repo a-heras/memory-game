@@ -1,5 +1,6 @@
 import { el } from './dom.js';
-import { PAIRS_COUNT, CARDS_COUNT } from './cards.js';
+import { PAIRS_COUNT } from './cards.js';
+import { createDeck, renderBoard } from './game.js';
 
 const newGameBtn = el('button', {
     class: 'btn btn--primary',
@@ -33,19 +34,7 @@ const stats = el('div', { class: 'stats' }, [
 ]);
 
 const board = el('div', { class: 'board' });
-
-for (let i = 0; i < CARDS_COUNT; i += 1) {
-    const card = el('button', {
-        class: 'card',
-        type: 'button',
-        dataset: { index: String(i) },
-        'aria-label': 'Закрытая карточка',
-    }, [
-        el('span', { class: 'card__face card__face--back', text: '?' }),
-        el('span', { class: 'card__face card__face--front' }),
-    ]);
-    board.appendChild(card);
-}
+renderBoard(board, createDeck());
 
 const app = el('div', { class: 'app' }, [header, stats, board]);
 document.body.appendChild(app);
