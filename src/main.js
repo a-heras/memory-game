@@ -7,6 +7,7 @@ import {
     setOnWin,
 } from './game.js';
 import { createWinModal } from './winModal.js';
+import { createLeadersModal } from './leadersModal.js';
 
 const newGameBtn = el('button', {
     class: 'btn btn--primary',
@@ -55,10 +56,14 @@ setOnWin((moves) => {
     winModal.open();
 });
 
+const leadersModal = createLeadersModal();
+leadersBtn.addEventListener('click', () => leadersModal.open());
+
 const app = el('div', { class: 'app' }, [
     header,
     stats,
     board,
     winModal.element,
+    leadersModal.element,
 ]);
 document.body.appendChild(app);

@@ -1,5 +1,6 @@
 import { el } from './dom.js';
 import { CARD_VALUES } from './cards.js';
+import { saveScore } from './storage.js';
 
 const MISMATCH_DELAY = 1000;
 
@@ -112,9 +113,13 @@ function onCardClick(event) {
         state.firstCard = null;
         state.secondCard = null;
 
-        if (state.foundPairs === state.totalPairs
-            && typeof onWinCallback === 'function') {
-            onWinCallback(state.moves);
+        if (state.foundPairs === state.totalPairs) {
+
+            saveScore(state.moves);
+
+            if (typeof onWinCallback === 'function') {
+                onWinCallback(state.moves);
+            }
         }
         return;
     }

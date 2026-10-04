@@ -231,13 +231,10 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.25s var(--ease);
     pointer-events: none;
 }
 
 .modal--open {
-    opacity: 1;
     pointer-events: auto;
 }
 
@@ -251,6 +248,12 @@ button {
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.2s var(--ease);
+}
+
+.modal--open .modal__backdrop {
+    opacity: 1;
 }
 
 .modal__dialog {
@@ -262,11 +265,15 @@ button {
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     transform: scale(0.96);
-    transition: transform 0.25s var(--ease);
+    opacity: 0;
+    transition:
+        transform 0.25s var(--ease),
+        opacity 0.25s var(--ease);
 }
 
 .modal--open .modal__dialog {
     transform: scale(1);
+    opacity: 1;
 }
 
 .modal__content {
@@ -302,4 +309,48 @@ button {
     justify-content: center;
     gap: 10px;
     margin-top: 24px;
+}
+
+/* --- таблица лидеров --- */
+.leaders {
+    width: 100%;
+    margin-top: 16px;
+    border-collapse: collapse;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+}
+
+.leaders th,
+.leaders td {
+    padding: 8px 6px;
+    text-align: left;
+}
+
+.leaders th {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.leaders td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.leaders tr:last-child td {
+    border-bottom: none;
+}
+
+.leaders th:nth-child(1),
+.leaders td:nth-child(1) {
+    width: 40px;
+    text-align: center;
+}
+
+.leaders th:nth-child(2),
+.leaders td:nth-child(2) {
+    width: 80px;
+    text-align: center;
 }
